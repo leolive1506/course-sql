@@ -1,0 +1,45 @@
+Banco de dados
+    Guardar informções
+    Ex de banco de dados:
+        SQLite, MariaDB, MySQL, PostgreSQL, mongoDB, ORACLE
+
+Geral 
+    Informações são organizadas em Tabelas (linhas e colunas)
+    Campos - titulo das informações
+    Informações - Informação cadastrada (valores)
+
+    Pode relacionar as informações entre tabelas
+
+Tipos de campos
+    TEXT
+    NUMBER
+    DATETIME 
+        data e hora
+
+    PRIMARY KEY
+        Todas tabelas precisam ter
+        Idenficador
+        Ex: id (único pra cada)
+    
+    FOREIGN KEY
+        Chave estrangeira
+        Referencia a primary key de outra tabela
+        Como é uma referencia, pode repetir na tabela
+
+    UNIQUE
+        Um campo que não pode repetir
+        Ex: node de usuário
+
+Regras para escrever nome de tabelas e campos
+    Sempre começar com letra
+    Não são permitidos
+        () + - / * " ; = & | # > < ^ ' {} %
+
+    Não pode conter espaços nem acentuação
+
+    Ex de tabela
+        Nome: TEXT
+        Nome_de_usuario: TEXT UNIQUE
+        Descricao: TEXT
+        Telefone: NUMBER
+        id_user: NUMBER PRIMARY KEY

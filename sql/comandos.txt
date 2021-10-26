@@ -1,0 +1,59 @@
+Selecionar qual banco de dados usar
+    USE name
+
+SELECT
+    ex: SELECT * FROM table
+    seleciona tudo aluno
+
+    Especificando campos
+        SELECT campo1, campo2 FROM table
+        As colunas são colocadas de acordo com a ordem escrita na pesquisa
+
+    SELECT com WHERE
+            SELECT * FROM table WHERE validação  
+        Pegar todos nomes que começam com determinada letra
+            SELECT * FROM table WHERE nome like "j%"
+                dps de porcentagem não importa oq vem dps
+        Quando não souber o inicio nem o final mas souber alguma parte
+            SELECT * FROM table WHERE nome like "%j%"
+        like - parecido, contendo, igual
+
+Operadores
+    = 
+        pegar um valor especifico, so funciona em campos NUMBER
+
+    like
+        semelhante ao igual, so que pra campos TEXT
+        pode usar os % quando souber uma parte e quiser o restante
+
+    
+    >
+        pega acima de um valor
+
+    >= 
+        pega acima ou igual de um valor
+
+    < 
+        pega abaixo de um valor
+
+    <= 
+        pega menor ou igual de um valor
+
+    <>  
+        não igual a
+        pega valor exceto esse na validação
+
+    != 
+        diferente
+
+    +
+        soma
+
+    -
+        subtração
+        
+    * 
+        multiplicação
+
+    / 
+        divisão
