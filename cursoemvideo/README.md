@@ -96,6 +96,10 @@ desc pessoas;
 * int UNSIGNED
     * Não permite sinal
 
+* Registros ou tupla é a mesma coisa que linha
+
+# Comandos
+
 * Comando para criar database
 ```sql
 create database nameDatabase character set utf8 collate utf8_unicode_ci;
@@ -184,4 +188,32 @@ ALTER TABLE nome_antigo_table RENAME TO nome_novo_da_coluna;
 ALTER TABLE nome_tabela ADD COLUMN id int FIST;
 
 ALTER TABLE nome_table ADD PRIMARY KEY (id);
+```
+
+* Alterar linha (registro ou tupla)
+```sql
+UPDATE nome_da_tabela 
+SET campo_da_tabela_que_sofrera_mudanca1 = 'novoValor1', 
+    campo_da_tabela_que_sofrera_mudanca2 = 'novoValor2' where condicao;
+```
+
+    * Limitar quantas linhas vão ser afetadas
+```sql
+UPDATE cursos set nome = 'php' where id = '1' LIMIT 1
+```
+
+* Remover linhas
+```sql
+DELETE FROM nome_da_table WHERE condicao;
+-- limitar quantidade
+DELETE FROM nome_da_table WHERE condicao LIMIT 3;
+```
+
+
+* Apagar todos os registros / dados / linha de uma tabela
+```sql
+TRUNCATE TABLE nome_da_table_que_vai_remover_as_linhas;
+
+-- mesma coisa
+TRUNCATE nome_da_table_que_vai_remover_as_linhas;
 ```
