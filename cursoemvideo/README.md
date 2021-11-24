@@ -217,3 +217,135 @@ TRUNCATE TABLE nome_da_table_que_vai_remover_as_linhas;
 -- mesma coisa
 TRUNCATE nome_da_table_que_vai_remover_as_linhas;
 ```
+
+# SELECT
+* Escolher a ordem da seleção
+```sql
+SELECT * FROM nome_da_table ORDER BY nome_campo_que_vai_seguir_a_ordem;
+
+-- MESMA COISA ACIMA
+SELECT * FROM nome_da_table ORDER BY nome_campo_que_vai_seguir_a_ordem ASC;
+
+
+-- COMEÇA COM MAIOR(NUM) OU ULTIMA LETRA(TEXT)
+SELECT * FROM nome_da_table ORDER BY nome_campo_que_vai_seguir_a_ordem DESC;
+
+-- mais de um campo
+SELECT ano, nome, cpf FROM nome_da_table ORDER BY id, nome
+```
+
+* Selecionar com condição
+```sql
+SELECT * FROM nome_da_table WHERE condicao ORDER BY campo_que_vai_dar_base_p_ordem;
+
+SELECT * FROM nome_da_table WHERE condicao1 AND condicao2 ORDER BY campo_que_vai_dar_base_p_ordem;
+
+SELECT * FROM nome_da_table WHERE condicao1 OR condicao2 ORDER BY campo_que_vai_dar_base_p_ordem;
+
+```
+
+* Selecionar entre, valores especificos
+```sql
+-- entre
+SELECT nome, ano FROM nome_da_table WHERE ano BETWEEN 2014 AND 2016;
+
+-- valores especificos
+SELECT ano, nome FROM cursos where ano IN ('2022', '2021');
+```
+
+* Like
+```sql
+SELECT * FROM nome_da_table WHERE nome like 'a%';
+SELECT * FROM nome_da_table WHERE nome like '%a';
+
+-- ACHAR EM QUALQUER LUGAR
+SELECT * FROM nome_da_table WHERE nome like '%a%';
+
+-- NÃO PEGA OS QEU COMEÇA COM 'A'
+SELECT * FROM nome_da_table WHERE nome NOT like 'a%';
+
+-- PEGA OS QUE COMEÇAM COM 'PH' E TERMINAL COM 'P'
+    -- EX: PHP, PHOTOSHOP
+
+SELECT * FROM cursos WHERE nome LIKE 'PH%P';
+
+-- PARA OBRIGAR QUE TENHA UM CARACTER ANTES OU DPS USAR "_"
+    --  No final tem algo dps do p
+    -- ex: php4
+SELECT * FROM nome_da_table WHERE nome like 'php%p_';
+    -- No começo tem algo antes do p e termina com p
+select * from cursos where nome like '%_p';
+
+```
+
+* Distinguindo
+    * Não permite selecionar repetição, pega so um
+    * Ex: Tabela com muitos usuários de diferentes paises onde muitos paises se repetem varias vezes. Usando DISTINCT ele não deixa repetir o pais na busca e lista os paises de onde os users moram
+    ```sql
+    SELECT DISTINCT nacionalidade from tabela_que_quer_selecionar ORDER BY nacionalidade;
+    ```
+
+* Funções de Agregação
+    * COUNT - Selecionar ou totalizar alguma coisa
+    ```sql
+    -- Lista quantos nomes tem na tabela (se a table for muito grande pode levar tempo pra chegar no ultimo)
+    select count(nome) from cursos;
+
+    -- Conta as cargas maiores que 40
+    select count(*) from cursos where carga > 40;
+    ```
+
+    * MAX(campo) - pega o valor max de um campo
+    ```sql
+    select max(carga) from cursos;
+    select max(totaulas) from cursos where ano = '2021';
+    ```
+
+    * MIN(campo) - pega o valor min de um campo
+    ```sql
+    select min(totaulas) from cursos where ano = '2021';
+    ```
+
+    * SUM(campo) - somar
+    ```sql
+    select sum(totaulas) from cursos where ano = '2016'
+    ```
+
+    * AVG(campo) - Tirar a média
+        * Soma tudo e divide pelo número de items
+    ```sql
+    select AVG(totaulas) from cursos where;
+    ```
+
+# Exercício
+```sql
+-- 1) Uma lista com o nome de todos os gafanhotos Mulheres.
+
+select nome from gafanhotos where sexo="f";
+
+-- 2) Uma lista com os dados de todos aqueles que nasceram entre 1/Jan/2000 e 31/Dez/2015.
+
+select * from gafanhotos where nascimento between '2000-01-01' and '2015-12-31';
+
+-- 3) Uma lista com o nome de todos os homens que trabalham como programadores.
+select nome from gafanhotos where prof = 'programador';
+
+-- 4) Uma lista com os dados de todas as mulheres que nasceram no Brasil e que têm seu nome iniciando com a letra J.
+select * from gafanhotos where nacionalidade = 'Brasil' and nome like 'j%';
+
+-- 5) Uma lista com o nome e nacionalidade de todos os homens que têm Silva no nome, não nasceram no Brasil e pesam menos de 100 Kg.
+select nome, nacionalidade from gafanhotos where sexo = 'M' and nacionalidade != 'Brasil' and peso < '100';
+
+-- 6) Qual é a maior altura entre gafanhotos Homens que moram no Brasil?
+select max(altura) from gafanhotos where nacionalidade = 'Brasil';
+
+-- 7) Qual é a média de peso dos gafanhotos cadastrados?
+select avg(peso) from gafanhotos;
+
+-- 8) Qual é o menor peso entre os gafanhotos Mulheres que nasceram fora do Brasil e entre 01/Jan/1990 e 31/Dez/2000?
+select min(peso) from gafanhotos where sexo = 'F' and nacionalidade <> 'brasil' and nascimento BETWEEN '1990-01-01' and '2000-12-31';
+             
+
+-- 9) Quantas gafanhotos Mulheres tem mais de 1.90cm de altura?
+select * from gafanhotos where sexo = 'F' and altura > '1.90';
+```
