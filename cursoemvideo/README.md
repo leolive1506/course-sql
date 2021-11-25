@@ -562,7 +562,15 @@ on c.idcurso = gac.idcurso;
 - O Gerente da Loja quer um sistema para cadastrar as vendas
 - Na venda deve ter quem é o funcionário que vendeu, e qual veículo foi vendido, além do valor de venda
 
+
 ```sql
+-- d de relacionamento de 1 tabela pra outra, deve ser sempre
+-- nome_da_tabela_no_singular_id
+-- exemplo
+-- funcionar_id
+-- veiculo_id
+-- idfuncionario -> funcionario_id 
+
 create database exerciciopatrick character set utf8 collate utf8_unicode_ci;
 
 use exerciciopatrick;
@@ -592,8 +600,8 @@ insert into veiculos values
 
 create table vendas (
 	id int not null auto_increment,
-	idfuncionario int,
-	idveiculo int,
+	funcionario_id int,
+	veiculo_id int,
 	primary key (id),
 	foreign key (idfuncionario) references funcionarios (id),
 	foreign key (idveiculo) references veiculos (id)
@@ -613,5 +621,7 @@ from vendas as ve join funcionarios as f
 on f.id =  ve.idfuncionario
 join veiculos v
 on v.id = ve.idveiculo;
+
+
 
 ```
