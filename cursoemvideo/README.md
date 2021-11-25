@@ -316,8 +316,35 @@ select * from cursos where nome like '%_p';
     ```sql
     select AVG(totaulas) from cursos where;
     ```
+# Agrupamento
+* O DISTINCT so distingui, se precisar contar quantas vezes aparecer precisa agrupar
+```sql
+select totaulas, count(*) from cursos GROUP BY totaulas;
+
+-- mostrar se for maior que um valor
+-- HAVING É SEMELHANTE AO WHERE DO SELECT
+-- NO HAVING SO PODE USAR O CAMPO USADO NO GROUP BY
+select carga, COUNT(nome) from cursos where totaulas = '20' group by carga HAVING count(nome) > 3;
+
+SELECT ano, count(*) from cursos 
+WHERE totaulas > 30
+GROUP BY ano
+HAVING ano > 2013
+ORDER BY count(*) desc;
+```
+
+* Agrupando SELECT
+```sql
+-- vai mostrar sempre se for maior que a média de carga*
+select carga, count(carga) from cursos 
+where ano > 2015 
+group by carga
+having carga > (select avg(carga) from cursos);
+```
+
 
 # Exercício
+1. 
 ```sql
 -- 1) Uma lista com o nome de todos os gafanhotos Mulheres.
 
@@ -348,4 +375,181 @@ select min(peso) from gafanhotos where sexo = 'F' and nacionalidade <> 'brasil' 
 
 -- 9) Quantas gafanhotos Mulheres tem mais de 1.90cm de altura?
 select * from gafanhotos where sexo = 'F' and altura > '1.90';
+```
+
+2. 
+```sql
+-- 1- Uma lista com as profissoes dos gafanhotos e seus respectivos quantitativos.
+
+select prof, count(*) from gafanhotos group by prof order by count(*);
+
+-- 2- Quantos gafanhotos homens e mulheres nasceram após 01/jan/2005
+
+select sexo, count(sexo) from gafanhotos where nascimento > '2005-01-01' group by sexo;
+
+
+-- 3- Lista com gafanhotos que nasceram fora do BRASIL, mostrando o país de origem e o total de pessoas nascidas lá. Só nos interessam os países que tiveram mais de 3 gafanhotos com essa nacionalidade.
+select nacionalidade, count(*) from gafanhotos where nacionalidade != 'Brasil' group by nacionalidade having count(*) > 3;
+
+-- 4- Uma lista agrupada pela altura dos gafanhotos, mostrando quantas pessoas pesam mais de 100kg e que estao acima da media da altura de todos os gafanhotos
+
+select altura, count(*) from gafanhotos 
+where peso > 100 
+group by altura 
+having altura > (select avg(altura) from gafanhotos);
+
+```
+
+# Banco Relacional
+* Entidade
+    * Container onde dentro tem dados (atributos)
+        * Esses conjuntos de atributos vão identificar tuplas
+        * Algum desses atributos serve pra identificar a tupla (primary key)
+    * Toda entidade contém uma coleção de atributos
+
+* Duas ou mais entidade podem relacionar entre si
+
+* DER
+    * Diagrama Entidade - Relacionamento
+
+
+* Cardinalidade
+    * Simples ou múltipla
+    * Relacionamento *muitos para muitos* ou n para n
+        Ex:
+        * Uma pessoa pode assitir vários cursos
+        * Cada um dos cursos pode ser assistido por N gafanhotos
+
+    * Relacionamento *um para um*
+        * So pode ter um Relacionamento
+        Ex: 
+        * Um marido so pode ter uma esposa e uma esposa so pode ter um marido
+
+    * Relacionamento de *um para muitos*
+        * Ex:
+            * Cada funcionário pode ter N dependentes
+            * Mas cada dependente so pode ter um funcionário
+
+* Chave estrangeira
+    * Relação entre entidades através da troca de chaves
+    * É uma chave primária de algum lugar que veio de algum lugar
+
+    * No relaciomento *um para um*
+        * Analisar se pode juntar os dados em uma única tabela
+        * Tem uma entidade dominante
+        * Os nomes dos campo da chave estrangeira não precisa ser o mesmo do nome da tabela original, mas ter os mesmos tipo
+    <img src="./umparaum.png">
+
+    * No relacionamento *um para muitos*
+        * Regra:
+            * Pega a chave estrageira do lado um e joga para o lado muitos como chave estrangeira (ter os mesmo tipos no campo)
+
+        * Ex: 
+            * Um funcionário pode ter n dependentes, mas um depedente pode ter um funcionário
+            <img src="./umparamuitos.png">
+
+    * No relaciomento *muitos para muitos*
+        * Regra: O Relacionamento vira uma Entidade
+        <img src="muitosparamuitos.png">
+
+
+# Relacionando (código)
+* Engines
+    * Máquinas que permite criação de tables com algumas caracteristicas necessárias como por ex: Suportar uso da chave estrangeira
+        * Ex de engines: 
+            * MyISAM (mais antiga, não tem suporte ACID)
+            * InnoDB (suporta ACID)
+            * XtraDB (suporta ACID)
+
+        
+
+    * ACID
+        * 4 Principais regras de uma boa transação
+            * transação -> tudo aquilo que possa pedir para um banco de dados e ele executar e dar uma resposta
+
+        * A 
+            * Atomicidade:
+                * Nao pode ser dividida em tarefas
+                    * Ou toda tarefa é feita ou nada é considerado
+        * C
+            * Consistência
+                * Se ele tava consistente antes da transação, tem que continuar após tb
+                * Se antes estava 'ok' tem que continuar 'ok'
+                    * Caso ocorra tudo é desfeito para o estado anterior
+
+        * I 
+            * Isolamento
+                * Quando tem duas transações acontecendo em pararelo, elas devem acontecer como se estivessem acontecendo de forma isolada
+                * Ex: Pedidos de diferentes clientes não podem interferir uma na outra
+
+        * D
+            * Durabilidade
+                * Tem que durar o tempo que for necessário / enquanto precisar dele
+
+    ```sql
+    CREATE TABLE nome_da_table (
+
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    ```
+    * Criar
+    ```sql
+    CREATE TABLE gafanhoto_assite_curso (
+        id int NOT NULL AUTO_INCREMENT,
+        data date,
+        idgafanhoto int,
+        idcurso,
+        PRIMARY KEY (id);
+        FOREIGN KEY (idgafanhoto) REFERENCES gafanhoto (id),
+        FOREIGN KEY (idcurso) REFERENCES cursos (idcurso)
+    ) DEFAULT CHARSET = utf8;
+    ```
+
+    * Adicionar em uma table ja existente
+    ```sql
+    alter table gafanhotos add column cursopreferido int;
+
+    alter table gafanhotos add foreign key (cursopreferido)
+    references cursos(idcurso);
+
+    update gafanhotos set cursopreferido = '6' where id = '2';
+    ```
+
+* Quando faz o select ele mostra o id, se quiser ver os dados é preciso fazer junções entre tabelas (JOIN)
+```sql
+-- se fizesse assim ele criaria relação com todos cursos
+select gafanhotos.nome, gafanhotos.cursopreferido, curso.nome, curso.ano from gafanhotos join curso;
+
+-- inner join e so join dão no mesmo
+
+-- usar um filtro (ON)
+SELECT table1.nome, table1.campo_chave_estrangeira, table2.campo_a_mostrar1, table2.campo_a_mostrar2 from table_com_chave_estrageira JOIN table_com_os_dados_da_chave_estrangeira(id_dela) ON table2.primary_key = table1.chave_estrangeira;
+```
+
+* Definir um apelido
+```sql
+SELECT g.nome, g.cursopreferido, c.nome, c.ano 
+from gafanhotos as g join cursos as c
+on c.idcurso = g.cursopreferido; 
+```
+
+* OUTER JOIN
+    * Trata os conceitos do inner join junto com os dados que não tem relação com outra tabela
+    * Fazendo so com o join ou inner join ele lista so os que tem o relacionamento filtrado com o on
+    * Ao usar pode dar preferencia para qual table listar todos
+        * LEFT RIGHT
+    ex:
+    ```sql
+    SELECT g.nome, c.nome, c.ano from gafanhotos as g left join cursos as c 
+    on c.idcurso = g.cursopreferido;
+    ```
+    <img src="./resultadoleftjoin.png">
+
+* Mais de um join
+```sql
+select gac.data, gac.idgafanhoto, gac.idcurso, g.nome, c.nome
+from gafanhoto_assiste_curso as gac 
+join gafanhotos as g
+on g.id = gac.idgafanhoto
+join cursos c 
+on c.idcurso = gac.idcurso;
 ```
