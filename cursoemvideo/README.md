@@ -553,3 +553,65 @@ on g.id = gac.idgafanhoto
 join cursos c 
 on c.idcurso = gac.idcurso;
 ```
+
+
+# CRIE O BANCO DE DADOS DA LOJA DE VEÍCULOS
+
+- A loja tem vários funcionários que vão usar o sistema
+- Existe um cadastro de veículos para venda
+- O Gerente da Loja quer um sistema para cadastrar as vendas
+- Na venda deve ter quem é o funcionário que vendeu, e qual veículo foi vendido, além do valor de venda
+
+```sql
+create database exerciciopatrick character set utf8 collate utf8_unicode_ci;
+
+use exerciciopatrick;
+
+create table funcionarios (
+	id int not null auto_increment,
+	nome varchar(30) not null,
+	email varchar(40) not null,
+	primary key (id)
+) DEFAULT CHARSET=utf8;
+
+insert into funcionarios values
+(default, 'Leo', 'leonardo@gmail.com'),
+(default, 'Patrick', 'patrick@gmail.com');
+
+
+create table veiculos (
+	id int not null auto_increment,
+	marca varchar(20) not null,
+	modelo varchar(40) not null,
+	primary key id(id)
+) DEFAULT charset=utf8;
+
+insert into veiculos values
+(default, 'Fiat', 'Fiat Unu'),
+(default, 'Chevrolet', 'Onix');
+
+create table vendas (
+	id int not null auto_increment,
+	idfuncionario int,
+	idveiculo int,
+	primary key (id),
+	foreign key (idfuncionario) references funcionarios (id),
+	foreign key (idveiculo) references veiculos (id)
+) DEFAULT charset = utf8;
+
+insert into vendas values
+(default, '1', '2'),
+(default, '2', '1');
+
+-- tinha criado de outro tipo
+alter table vendas CHANGE COLUMN valor_da_venda valor_da_venda int;
+update vendas set valor_da_venda = '90000' where id='1';
+update vendas set valor_da_venda = '80000' where id='2';
+
+select ve.idfuncionario, f.nome, v.modelo, ve.valor_da_venda
+from vendas as ve join funcionarios as f
+on f.id =  ve.idfuncionario
+join veiculos v
+on v.id = ve.idveiculo;
+
+```
